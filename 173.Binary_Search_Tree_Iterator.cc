@@ -1,7 +1,12 @@
 #include <iostream>
 #include <cassert>
-#include <queue>
+/*
+Follow up:
 
+    Could you implement next() and hasNext() to run in average O(1) time and use O(h) memory, where h is the height of the tree?
+
+    Using a stack gets us to O(h) memory and O(1) time for hasNext(), but next() is still O(h) time, so I'm gonna be lazy and not write it.
+*/
 struct TreeNode {
     int val;
     TreeNode *left;
@@ -9,69 +14,63 @@ struct TreeNode {
     TreeNode() : val(0), left(nullptr), right(nullptr) {}
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
+};  
 
-class Solution {
+class BSTIterator {
+private:
+    std::vector<TreeNode*> nodes;
+    int currIndex = -1;
 public:
-    int findBottomLeftValue(TreeNode* root) {
-        std::queue<TreeNode*> nodeQueue;
-        int furthestLeft = 0;
-
-        nodeQueue.push(root);
-        while(!nodeQueue.empty()) {
-            int n = nodeQueue.size();
-
-            for (int i = 0; i < n; ++i) {
-                TreeNode* node = nodeQueue.front();
-                if (i == 0) furthestLeft = node->val;
-                // std::cout << "Left value of new row: " << furthestLeft << "\n";
-                std::cout << node->val << " ";
-
-                nodeQueue.pop();
-                if (node->left != nullptr) {
-                    nodeQueue.push(node->left);
-                }
-
-                if (node->right != nullptr) {
-                    nodeQueue.push(node->right);
-                }
-            }            
+    void addNode(std::vector<TreeNode*>& nodes, TreeNode* node) {
+        if (node == nullptr) {
+            return;
         }
-        std::cout << "\n";
-
-        return furthestLeft;
+        addNode(nodes, node->left);
+        nodes.push_back(node);
+        addNode(nodes, node->right);
+    }
+    BSTIterator(TreeNode* root) {
+        addNode(nodes, root);
+    }
+    
+    int next() {
+        if (nodes[currIndex+1] != nullptr) {
+            ++currIndex;
+        }
+        return nodes[currIndex]->val;
+    }
+    
+    bool hasNext() {
+        if (currIndex == nodes.size() - 1) {
+            return false;
+        }
+        return true;
     }
 };
 
-/*
-    Traverse tree using preorder traversal
-    Keep track of deepest level seen so far, keep values of nodes at the deepest level so far in a set
-    If a new deeper level is found, clear deepest set
-
-    or
-
-    Using inorder traversal -- first node output is the furthest left and deepest, node seen after the root is furthest left on the right-side 
-    Determine height of these nodes, return the value of the node that's deeper
-
-    jk I'm dumb, BFS is the way to go
-*/
-
+/**
+ * Your BSTIterator object will be instantiated and called as such:
+ * BSTIterator* obj = new BSTIterator(root);
+ * int param_1 = obj->next();
+ * bool param_2 = obj->hasNext();
+ */
 int main() {
-    Solution solution;
-    TreeNode* root = new TreeNode(2);
-    root->left = new TreeNode(1);
-    root->right = new TreeNode(3);
+    TreeNode* root = new TreeNode(7);
+    root->left = new TreeNode(3);
+    root->right = new TreeNode(15);
+    root->right->left = new TreeNode(9);
+    root->right->right = new TreeNode(20);
 
-    TreeNode* root2 = new TreeNode(1);
-    root2->left = new TreeNode(2);
-    root2->left->left = new TreeNode(4);
-    root2->right = new TreeNode(3);
-    root2->right->right = new TreeNode(6);
-    root2->right->left = new TreeNode(5);
-    root2->right->left->left = new TreeNode(7);
-
-    assert(solution.findBottomLeftValue(root) == 1);
-    assert(solution.findBottomLeftValue(root2) == 7);
+    BSTIterator* bSTIterator = new BSTIterator(root);
+    assert(bSTIterator->next() == 3);    // return 3
+    assert(bSTIterator->next() == 7);    // return 7
+    assert(bSTIterator->hasNext() == true); // return True
+    assert(bSTIterator->next() == 9);    // return 9
+    assert(bSTIterator->hasNext() == true); // return True
+    assert(bSTIterator->next() == 15);    // return 15
+    assert(bSTIterator->hasNext() == true); // return True
+    assert(bSTIterator->next() == 20);    // return 20
+    assert(bSTIterator->hasNext() == false); // return False
 
     std::cout << "All tests passed!";
     return 0;
