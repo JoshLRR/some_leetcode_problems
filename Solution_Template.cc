@@ -11,6 +11,6 @@ int main() {
     
     assert();
 
-    std::cout << "All tests passed!";
+    std::cout << "\033[32mAll tests passed!\033[0m";
     return 0;
 }

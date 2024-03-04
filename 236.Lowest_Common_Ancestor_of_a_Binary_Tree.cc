@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cassert>
 
-
 struct TreeNode {
     int val;
     TreeNode *left;
@@ -11,10 +10,33 @@ struct TreeNode {
 
 class Solution {
 public:
+    TreeNode* findAncestor(TreeNode* node, TreeNode* p, TreeNode* q) {
+        if (node == nullptr || node == p || node == q) {
+            return node;
+        }
+
+        TreeNode* left = findAncestor(node->left, p, q);
+        TreeNode* right = findAncestor(node->right, p, q);
+
+        if (left && right) {
+            return node;
+        } else if (!left && right) {
+            return right;
+        } else if (left && !right) {
+            return left;
+        }
+
+        return nullptr;
+    }
+
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        
+        return findAncestor(root, p, q);
     }
 };
+
+/*
+    Find lowest node that has both p and q as children
+*/
 
 int main() {
     Solution solution;
@@ -33,7 +55,7 @@ int main() {
 
     assert(solution.lowestCommonAncestor(root, root->left, root->right) == root);
     assert(solution.lowestCommonAncestor(root, root->left, root->left->right->right) == root->left);
-    assert(solution.lowestCommonAncestor(root2, root2, root2->left) == root);
+    assert(solution.lowestCommonAncestor(root2, root2, root2->left) == root2);
 
     std::cout << "All tests passed!";
     return 0;
