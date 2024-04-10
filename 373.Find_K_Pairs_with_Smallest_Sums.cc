@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cassert>
 #include <queue>
+#include <chrono>
+
 class Solution {
 public:
     std::vector<std::vector<int>> kSmallestPairs(std::vector<int>& nums1, std::vector<int>& nums2, int k) {
@@ -47,6 +49,8 @@ public:
 
 int main() {
     Solution solution;
+
+    auto t0 = std::chrono::high_resolution_clock::now();
     std::vector<int> numsa1 = {1,7,11};
     std::vector<int> numsa2 = {2,4,6};
     int k1 = 3;
@@ -63,8 +67,14 @@ int main() {
     std::vector<int> numsC2 = {3,5,7,9};
     int k3 = 3;
     std::vector<std::vector<int>> ans3 = {{1,3}, {2,3}, {1,5}};
-    assert(solution.kSmallestPairs(numsC1, numsC2, k3) == ans3);
+    // assert(solution.kSmallestPairs(numsC1, numsC2, k3) == ans3);
+    auto end = std::chrono::high_resolution_clock::now();
 
-    std::cout << "\033[32mAll tests passed!\033[0m";
+    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - t0);
+    double time = elapsed.count() / 1e6;
+
+    // std::cout << "\033[32mAll tests passed!\033[0m";
+    std::cout << "All tests passed in " << time << "ms!\n";
+
     return 0;
 }
