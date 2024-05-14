@@ -5,42 +5,10 @@
 
 class Solution {
 private:
-    std::vector<int> ans;
-    std::unordered_map<int, std::vector<int>> adjList;
-    std::unordered_set<int> visited;
-    std::stack<int> prereqPath;
-
-    void dfs(int currClass) {
-        visited.insert(currClass);
-        for (auto& prereq : adjList[currClass]) {
-            if (visited.find(prereq) == visited.end()) {
-                dfs(prereq);
-            } else {        // Cycle detected, course path impossible
-                while (!prereqPath.empty()) {
-                    prereqPath.pop();
-                }
-                return;
-            }
-            prereqPath.push(currClass);
-        }
-    };
 
 public:
     std::vector<int> findOrder(int numCourses, std::vector<std::vector<int>>& prerequisites) {
-        for (auto& prereq : prerequisites) {
-            adjList[prereq[0]].push_back(prereq[1]);
-        }
-
-        for (auto& course : adjList) {
-            dfs(course.first);
-        }
-
-        while (!prereqPath.empty()) {
-            ans.push_back(prereqPath.top());
-            prereqPath.pop();
-        }
-
-        return ans;
+        
     }
 };
 
