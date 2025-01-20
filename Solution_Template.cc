@@ -21,6 +21,8 @@ int main() {
 
     auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - t0);
     double time = elapsed.count() / 1e6;
+    assert(test1 == ans1);
+    assert(test2 == ans2);
 
     std::cout << "\033[32m"
               << "All tests passed in " << time << "ms!\n"

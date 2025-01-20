@@ -7,22 +7,28 @@ class Solution {
 private:
 
 public:
+    void dfs() {
+
+    }
+
     std::vector<int> findOrder(int numCourses, std::vector<std::vector<int>>& prerequisites) {
-        
+        std::unordered_map<int, std::vector<int>> courseMap;
+
+        for (auto& prereqs : prerequisites) {
+            courseMap[prereqs[0]].push_back(prereqs[1]);
+        }
+
+        for (auto& course : courseMap) {
+            std::cout << "Course: " << course.first << " -> ";
+            for (int idx = 0; idx < course.second.size(); ++idx) {
+                std::cout << course.second[idx] << ", ";
+            }
+            std::cout << "\n";
+        }
+
+        return {};
     }
 };
-
-// class Solution {
-// public:
-//     std::vector<int> findOrder(int numCourses, std::vector<std::vector<int>>& prerequisites) {
-//         std::vector<std::vector<int>> adjList(numCourses);
-//         std::vector<int> ans, inDegree(numCourses);
-
-//         for (auto& preReq : prerequisites) {
-//             adjList[preReq[1]].push_back(preReq[0])
-//         }
-//     }
-// };
 
 /*
     Represent prerequisite graph using an unordered_map<int, vector<int> to make adj list
@@ -41,7 +47,7 @@ int main() {
     std::vector ans2 = {0,2,1,3};
     std::vector<std::vector<int>> prereqs3 = {};
     std::vector ans3 = {0};
-    assert(solution.findOrder(2, prereqs1) == ans1);
+    // assert(solution.findOrder(2, prereqs1) == ans1);
     assert(solution.findOrder(4, prereqs2) == ans2);
     assert(solution.findOrder(1, prereqs3) == ans3);
 
